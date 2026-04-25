@@ -166,9 +166,9 @@ export default function Docs() {
             <tbody>
               {[
                 { plan: 'Free', limit: '100 requests/day', price: '₹0' },
-                { plan: 'Premium', limit: '10,000 requests/day', price: '₹999/mo' },
-                { plan: 'Pro', limit: '1,00,000 requests/day', price: '₹2,999/mo' },
-                { plan: 'Unlimited', limit: 'Unlimited', price: '₹9,999/mo' },
+                { plan: 'Premium', limit: '10,000 requests/day', price: '₹99/mo' },
+                { plan: 'Pro', limit: '1,00,000 requests/day', price: '₹299/mo' },
+                { plan: 'Unlimited', limit: 'Unlimited', price: '₹999/mo' },
               ].map(r => (
                 <tr key={r.plan} className="border-b border-green-100">
                   <td className="py-3 font-bold text-gray-900">{r.plan}</td>

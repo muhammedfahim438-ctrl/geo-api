@@ -24,7 +24,7 @@ export default function Home() {
           <span className="text-green-600">API for India</span>
         </h1>
         <p className="text-xl text-gray-500 mb-8 max-w-2xl mx-auto">
-          457,290 villages across 28 states. Ready-to-use REST API for address dropdowns,
+          619,246 villages across 30 states. Ready-to-use REST API for address dropdowns,
           form autocomplete, and logistics platforms.
         </p>
         <div className="flex gap-4 justify-center">
@@ -40,8 +40,8 @@ export default function Home() {
       {/* Stats */}
       <div className="grid grid-cols-4 gap-6 px-8 py-12 max-w-5xl mx-auto">
         {[
-          { num: '457,290', label: 'Villages' },
-          { num: '28', label: 'States' },
+          { num: '619,246', label: 'Villages' },
+          { num: '30', label: 'States' },
           { num: '<100ms', label: 'Response Time' },
           { num: '99.9%', label: 'Uptime' },
         ].map(s => (
@@ -96,9 +96,9 @@ export default function Home() {
         <div className="grid grid-cols-4 gap-6">
           {[
             { name: 'Free', price: '₹0', requests: '100/day', popular: false },
-            { name: 'Premium', price: '₹999/mo', requests: '10,000/day', popular: false },
-            { name: 'Pro', price: '₹2,999/mo', requests: '1,00,000/day', popular: true },
-            { name: 'Unlimited', price: '₹9,999/mo', requests: 'Unlimited', popular: false },
+            { name: 'Premium', price: '₹99/mo', requests: '10,000/day', popular: false },
+            { name: 'Pro', price: '₹299/mo', requests: '1,00,000/day', popular: true },
+            { name: 'Unlimited', price: '₹999/mo', requests: 'Unlimited', popular: false },
           ].map(plan => (
             <div key={plan.name} className={`bg-white p-6 rounded-xl shadow-sm border-2 ${
               plan.popular ? 'border-green-500' : 'border-gray-100'

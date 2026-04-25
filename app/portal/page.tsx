@@ -135,7 +135,7 @@ export default function Portal() {
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center">
       <div className="bg-white border border-gray-100 shadow-lg p-8 rounded-2xl w-96">
         <h1 className="text-2xl font-bold text-gray-900 mb-1">🌍 India Geo API</h1>
-        <p className="text-gray-400 text-sm mb-6">457,290 villages across India</p>
+        <p className="text-gray-400 text-sm mb-6">619,246 villages across India</p>
 
         <div className="flex mb-6 bg-gray-100 rounded-lg p-1">
           <button onClick={() => { setView('login'); setError('') }}

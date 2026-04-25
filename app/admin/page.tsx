@@ -77,7 +77,7 @@ export default function AdminDashboard() {
           </div>
           <div className="bg-white border border-green-100 p-6 rounded-xl shadow-sm">
             <p className="text-gray-500 text-sm">Villages in DB</p>
-            <p className="text-4xl font-bold text-green-600 mt-1">457,290</p>
+            <p className="text-4xl font-bold text-green-600 mt-1">619,246</p>
           </div>
         </div>
 
