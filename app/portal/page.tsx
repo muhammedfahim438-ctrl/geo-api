@@ -63,6 +63,66 @@ export default function Portal() {
     setTimeout(() => setCopied(''), 2000)
   }
 
+  async function handlePayment(plan: string, amount: number, planName: string) {
+    try {
+      const orderRes = await fetch('/api/payment/create-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ plan })
+      })
+      const orderData = await orderRes.json()
+      if (!orderData.success) {
+        alert('Failed to create order: ' + orderData.error)
+        return
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js'
+      document.body.appendChild(script)
+      script.onload = () => {
+        const options = {
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+          amount: orderData.amount,
+          currency: 'INR',
+          name: 'India Geo API',
+          description: planName,
+          order_id: orderData.order_id,
+          handler: async (response: any) => {
+            const verifyRes = await fetch('/api/payment/verify', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                plan
+              })
+            })
+            const verifyData = await verifyRes.json()
+            if (verifyData.success) {
+              alert(`✅ Successfully upgraded to ${planName}!`)
+              setUser({ ...user, plan })
+            } else {
+              alert('Payment verification failed')
+            }
+          },
+          prefill: { email: user?.email },
+          theme: { color: '#16a34a' }
+        }
+        const rzp = new (window as any).Razorpay(options)
+        rzp.open()
+      }
+    } catch (error) {
+      alert('Payment failed. Please try again.')
+    }
+  }
+
   const planLimits: Record<string, number> = {
     free: 100, premium: 10000, pro: 100000, unlimited: 999999
   }
@@ -120,12 +180,41 @@ export default function Portal() {
         </div>
 
         {/* Quick Start */}
-        <div className="bg-white border border-gray-100 p-6 rounded-xl shadow-sm">
+        <div className="bg-white border border-gray-100 p-6 rounded-xl shadow-sm mb-6">
           <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Start</h3>
           <p className="text-gray-500 text-sm mb-2">Get all states:</p>
           <pre className="bg-gray-900 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">{`fetch('https://geo-api-blond.vercel.app/api/states', {
   headers: { 'x-api-key': '${apiKeys[0]?.key_value || 'YOUR_API_KEY'}' }
 })`}</pre>
+        </div>
+
+        {/* Upgrade Plan */}
+        <div className="bg-white border border-gray-100 p-6 rounded-xl shadow-sm">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Upgrade Plan</h3>
+          <div className="grid grid-cols-3 gap-4">
+            {[
+              { plan: 'premium', name: 'Premium', price: '₹999/mo', amount: 99900, requests: '10,000/day' },
+              { plan: 'pro', name: 'Pro', price: '₹2,999/mo', amount: 299900, requests: '1,00,000/day' },
+              { plan: 'unlimited', name: 'Unlimited', price: '₹9,999/mo', amount: 999900, requests: 'Unlimited' },
+            ].map(p => (
+              <div key={p.plan} className={`border-2 p-4 rounded-xl text-center ${
+                user?.plan === p.plan ? 'border-green-500 bg-green-50' : 'border-gray-100'
+              }`}>
+                <h4 className="font-bold text-gray-900">{p.name}</h4>
+                <p className="text-green-600 font-bold text-xl my-2">{p.price}</p>
+                <p className="text-gray-400 text-xs mb-3">{p.requests}</p>
+                {user?.plan === p.plan ? (
+                  <p className="text-green-600 font-bold text-sm">✅ Current Plan</p>
+                ) : (
+                  <button
+                    onClick={() => handlePayment(p.plan, p.amount, p.name)}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-bold text-sm">
+                    Upgrade
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
