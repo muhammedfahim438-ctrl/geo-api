@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 export default function Portal() {
   const [view, setView] = useState<'login'|'register'|'dashboard'>('login')
@@ -47,16 +47,14 @@ export default function Portal() {
   async function createKey() {
     const res = await fetch('/api/keys', {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({ name: 'New Key' })
     })
     const data = await res.json()
-    if (data.success) {
-      setApiKeys([...apiKeys, data.data])
-    }
+    if (data.success) setApiKeys([...apiKeys, data.data])
   }
 
   function copyKey(key: string) {
@@ -70,45 +68,49 @@ export default function Portal() {
   }
 
   if (view === 'dashboard') return (
-    <div className="min-h-screen bg-gray-900 text-white p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">🌍 India Geo API Portal</h1>
-          <div className="text-right">
-            <p className="text-gray-400">{user?.email}</p>
-            <span className={`px-3 py-1 rounded text-sm font-bold ${
-              user?.plan === 'pro' ? 'bg-purple-600' :
-              user?.plan === 'premium' ? 'bg-blue-600' : 'bg-gray-600'
-            }`}>{user?.plan?.toUpperCase()}</span>
-          </div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <nav className="bg-white border-b border-gray-100 shadow-sm px-8 py-4 flex justify-between items-center">
+        <h1 className="text-xl font-bold text-green-600">🌍 India Geo API</h1>
+        <div className="flex items-center gap-4">
+          <span className="text-gray-500 text-sm">{user?.email}</span>
+          <span className={`px-3 py-1 rounded-full text-xs font-bold text-white ${
+            user?.plan === 'pro' ? 'bg-purple-500' :
+            user?.plan === 'premium' ? 'bg-blue-500' : 'bg-green-500'
+          }`}>{user?.plan?.toUpperCase()}</span>
+          <button onClick={() => setView('login')} className="text-gray-400 hover:text-red-500 text-sm">Logout</button>
         </div>
+      </nav>
+
+      <div className="max-w-4xl mx-auto p-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">My Dashboard</h2>
 
         {/* Plan Info */}
-        <div className="bg-gray-800 p-6 rounded-xl mb-6">
-          <h2 className="text-xl font-bold mb-2">Your Plan</h2>
-          <p className="text-gray-400">Daily API Limit: <span className="text-white font-bold">{planLimits[user?.plan]?.toLocaleString()} requests/day</span></p>
-          <p className="text-gray-400 mt-1">Base URL: <span className="text-green-400 font-mono">https://geo-api-blond.vercel.app</span></p>
+        <div className="bg-white border border-green-100 p-6 rounded-xl shadow-sm mb-6">
+          <h3 className="text-lg font-bold text-gray-900 mb-2">Your Plan</h3>
+          <p className="text-gray-500">Daily Limit: <span className="text-green-600 font-bold">{planLimits[user?.plan]?.toLocaleString()} requests/day</span></p>
+          <p className="text-gray-500 mt-1">Base URL: <span className="font-mono text-green-600 bg-green-50 px-2 py-1 rounded text-sm">https://geo-api-blond.vercel.app</span></p>
         </div>
 
         {/* API Keys */}
-        <div className="bg-gray-800 p-6 rounded-xl mb-6">
+        <div className="bg-white border border-gray-100 p-6 rounded-xl shadow-sm mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">API Keys</h2>
-            <button onClick={createKey} className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded font-bold">
+            <h3 className="text-lg font-bold text-gray-900">API Keys</h3>
+            <button onClick={createKey} className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-bold text-sm">
               + New Key
             </button>
           </div>
           {apiKeys.map((key: any) => (
-            <div key={key.id} className="bg-gray-700 p-4 rounded-lg mb-3">
+            <div key={key.id} className="bg-gray-50 border border-gray-100 p-4 rounded-lg mb-3">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="font-bold">{key.name}</p>
-                  <p className="font-mono text-green-400 text-sm">{key.key_value}</p>
+                  <p className="font-bold text-gray-900">{key.name}</p>
+                  <p className="font-mono text-green-600 text-sm bg-green-50 px-2 py-1 rounded mt-1">{key.key_value}</p>
                 </div>
                 <div className="text-right">
-                  <button onClick={() => copyKey(key.key_value)} 
-                    className="bg-gray-600 hover:bg-gray-500 px-3 py-1 rounded text-sm mb-1 block">
-                    {copied === key.key_value ? '✅ Copied!' : '📋 Copy'}
+                  <button onClick={() => copyKey(key.key_value)}
+                    className="bg-green-100 hover:bg-green-200 text-green-700 px-3 py-1 rounded text-sm mb-2 block w-full">
+                    {copied === key.key_value ? '✅ Copied!' : '📋 Copy Key'}
                   </button>
                   <p className="text-gray-400 text-xs">Today: {key.requests_today} | Total: {key.requests_total}</p>
                 </div>
@@ -118,50 +120,49 @@ export default function Portal() {
         </div>
 
         {/* Quick Start */}
-        <div className="bg-gray-800 p-6 rounded-xl">
-          <h2 className="text-xl font-bold mb-4">Quick Start</h2>
-          <p className="text-gray-400 mb-2">Get all states:</p>
-          <pre className="bg-gray-900 p-3 rounded text-green-400 text-sm overflow-x-auto">
-{`fetch('https://geo-api-blond.vercel.app/api/states', {
+        <div className="bg-white border border-gray-100 p-6 rounded-xl shadow-sm">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Start</h3>
+          <p className="text-gray-500 text-sm mb-2">Get all states:</p>
+          <pre className="bg-gray-900 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">{`fetch('https://geo-api-blond.vercel.app/api/states', {
   headers: { 'x-api-key': '${apiKeys[0]?.key_value || 'YOUR_API_KEY'}' }
-})`}
-          </pre>
+})`}</pre>
         </div>
       </div>
     </div>
   )
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-      <div className="bg-gray-800 p-8 rounded-xl w-96">
-        <h1 className="text-2xl font-bold text-white mb-2">🌍 India Geo API</h1>
-        <p className="text-gray-400 mb-6">457,290 villages across India</p>
-        
-        <div className="flex mb-6">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center">
+      <div className="bg-white border border-gray-100 shadow-lg p-8 rounded-2xl w-96">
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">🌍 India Geo API</h1>
+        <p className="text-gray-400 text-sm mb-6">457,290 villages across India</p>
+
+        <div className="flex mb-6 bg-gray-100 rounded-lg p-1">
           <button onClick={() => { setView('login'); setError('') }}
-            className={`flex-1 py-2 rounded-l ${view === 'login' ? 'bg-blue-600' : 'bg-gray-700'}`}>
-            Login
-          </button>
+            className={`flex-1 py-2 rounded-md font-medium text-sm transition-all ${
+              view === 'login' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-500'
+            }`}>Login</button>
           <button onClick={() => { setView('register'); setError('') }}
-            className={`flex-1 py-2 rounded-r ${view === 'register' ? 'bg-blue-600' : 'bg-gray-700'}`}>
-            Register
-          </button>
+            className={`flex-1 py-2 rounded-md font-medium text-sm transition-all ${
+              view === 'register' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-500'
+            }`}>Register</button>
         </div>
 
-        {error && <p className={`mb-4 text-sm ${error.startsWith('✅') ? 'text-green-400' : 'text-red-400'}`}>{error}</p>}
+        {error && <p className={`mb-4 text-sm p-3 rounded-lg ${
+          error.startsWith('✅') ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-500'
+        }`}>{error}</p>}
 
         {view === 'register' && (
-          <input className="w-full bg-gray-700 text-white p-3 rounded mb-3" 
+          <input className="w-full border border-gray-200 text-gray-900 p-3 rounded-lg mb-3 focus:outline-none focus:border-green-400"
             placeholder="Company Name" value={company} onChange={e => setCompany(e.target.value)} />
         )}
-        <input className="w-full bg-gray-700 text-white p-3 rounded mb-3" 
+        <input className="w-full border border-gray-200 text-gray-900 p-3 rounded-lg mb-3 focus:outline-none focus:border-green-400"
           placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
-        <input className="w-full bg-gray-700 text-white p-3 rounded mb-4" 
+        <input className="w-full border border-gray-200 text-gray-900 p-3 rounded-lg mb-4 focus:outline-none focus:border-green-400"
           type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
-        
-        <button 
-          onClick={view === 'login' ? login : register}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded font-bold">
+
+        <button onClick={view === 'login' ? login : register}
+          className="w-full bg-green-600 hover:bg-green-700 text-white p-3 rounded-lg font-bold transition-all">
           {view === 'login' ? 'Login' : 'Create Account'}
         </button>
       </div>
