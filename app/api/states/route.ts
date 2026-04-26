@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     // Check cache first
     const cached = await getCached('states:all')
     if (cached) {
-      return NextResponse.json({ success: true, data: JSON.parse(cached), cached: true })
+      return NextResponse.json({ success: true, data: cached, cached: true })
     }
 
     const result = await pool.query('SELECT code, name FROM states ORDER BY name')

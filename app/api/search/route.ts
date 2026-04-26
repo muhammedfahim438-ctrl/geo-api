@@ -17,8 +17,8 @@ export async function GET(request: Request) {
   try {
     const cacheKey = `search:${q.toLowerCase()}`
     const cached = await getCached(cacheKey)
-    if (cached) {
-      return NextResponse.json({ success: true, data: JSON.parse(cached), cached: true })
+   if (cached) {
+      return NextResponse.json({ success: true, data: cached, cached: true })
     }
 
     const result = await pool.query(

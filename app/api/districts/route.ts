@@ -18,7 +18,7 @@ export async function GET(request: Request) {
     const cacheKey = `districts:${state_code}`
     const cached = await getCached(cacheKey)
     if (cached) {
-      return NextResponse.json({ success: true, data: JSON.parse(cached), cached: true })
+      return NextResponse.json({ success: true, data: cached, cached: true })
     }
 
     const result = await pool.query(
