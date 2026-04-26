@@ -1,19 +1,14 @@
 import { NextResponse } from 'next/server'
-import Razorpay from 'razorpay'
 import jwt from 'jsonwebtoken'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
 
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID!,
-  key_secret: process.env.RAZORPAY_KEY_SECRET!,
-})
-
 const PLANS = {
-  premium: { amount: 9900, name: 'Premium Plan' },   // ₹99
-  pro: { amount: 29900, name: 'Pro Plan' },           // ₹299
-  unlimited: { amount: 99900, name: 'Unlimited Plan' } // ₹999
+  premium: { amount: 9900, name: 'Premium Plan' },
+  pro: { amount: 29900, name: 'Pro Plan' },
+  unlimited: { amount: 99900, name: 'Unlimited Plan' }
 }
+
 export async function POST(request: Request) {
   const auth = request.headers.get('authorization')
   if (!auth?.startsWith('Bearer ')) {
@@ -29,6 +24,13 @@ export async function POST(request: Request) {
     }
 
     const planDetails = PLANS[plan as keyof typeof PLANS]
+
+    // Initialize Razorpay INSIDE the function
+    const Razorpay = (await import('razorpay')).default
+    const razorpay = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID!,
+      key_secret: process.env.RAZORPAY_KEY_SECRET!,
+    })
 
     const order = await razorpay.orders.create({
       amount: planDetails.amount,
