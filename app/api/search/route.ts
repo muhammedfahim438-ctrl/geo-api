@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import pool from '@/lib/db'
 import { validateApiKey } from '@/lib/auth'
+import { getCached, setCached } from '@/lib/cache'
 
 export async function GET(request: Request) {
   const apiKey = request.headers.get('x-api-key')
@@ -14,6 +15,12 @@ export async function GET(request: Request) {
   if (!q || q.length < 2) return NextResponse.json({ success: false, error: 'Query must be at least 2 characters' }, { status: 400 })
 
   try {
+    const cacheKey = `search:${q.toLowerCase()}`
+    const cached = await getCached(cacheKey)
+    if (cached) {
+      return NextResponse.json({ success: true, data: JSON.parse(cached), cached: true })
+    }
+
     const result = await pool.query(
       `SELECT v.name as village, sd.name as sub_district, 
               d.name as district, s.name as state,
@@ -26,7 +33,9 @@ export async function GET(request: Request) {
        LIMIT 20`,
       [`%${q}%`]
     )
-    return NextResponse.json({ success: true, data: result.rows })
+
+    await setCached(cacheKey, result.rows, 'search')
+    return NextResponse.json({ success: true, data: result.rows, cached: false })
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Search failed' }, { status: 500 })
   }

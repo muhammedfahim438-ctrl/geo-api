@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import pool from '@/lib/db'
 import { validateApiKey } from '@/lib/auth'
+import { getCached, setCached } from '@/lib/cache'
 
 export async function GET(request: Request) {
   const apiKey = request.headers.get('x-api-key')
@@ -14,11 +15,19 @@ export async function GET(request: Request) {
   if (!state_code) return NextResponse.json({ success: false, error: 'state_code is required' }, { status: 400 })
 
   try {
+    const cacheKey = `districts:${state_code}`
+    const cached = await getCached(cacheKey)
+    if (cached) {
+      return NextResponse.json({ success: true, data: JSON.parse(cached), cached: true })
+    }
+
     const result = await pool.query(
       'SELECT code, name FROM districts WHERE state_code = $1 ORDER BY name',
       [state_code]
     )
-    return NextResponse.json({ success: true, data: result.rows })
+
+    await setCached(cacheKey, result.rows, 'districts')
+    return NextResponse.json({ success: true, data: result.rows, cached: false })
   } catch (error) {
     return NextResponse.json({ success: false, error: 'Failed to fetch districts' }, { status: 500 })
   }
