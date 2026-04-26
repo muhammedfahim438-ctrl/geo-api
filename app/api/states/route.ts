@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import pool from '@/lib/db'
 import { validateApiKey } from '@/lib/auth'
-import { getCached, setCached } from '@/lib/cache'
+import { Redis } from '@upstash/redis'
 
 export async function GET(request: Request) {
   const apiKey = request.headers.get('x-api-key')
@@ -11,19 +11,39 @@ export async function GET(request: Request) {
   if ('error' in auth) return NextResponse.json({ success: false, error: 'Rate limit exceeded' }, { status: 429 })
 
   try {
-    // Check cache first
-    const cached = await getCached('states:all')
+    const redis = new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL!,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+    })
+
+    // Try to get from cache
+    const cached = await redis.get('states:all')
+    
     if (cached) {
-      return NextResponse.json({ success: true, data: cached, cached: true })
+      return NextResponse.json({ 
+        success: true, 
+        data: cached, 
+        cached: true,
+        message: 'FROM REDIS CACHE'
+      })
     }
 
+    // Get from database
     const result = await pool.query('SELECT code, name FROM states ORDER BY name')
     
-    // Save to cache
-    await setCached('states:all', result.rows, 'states')
+    // Save to Redis
+    await redis.setex('states:all', 86400, result.rows)
     
-    return NextResponse.json({ success: true, data: result.rows, cached: false })
-  } catch (error) {
-    return NextResponse.json({ success: false, error: 'Failed to fetch states' }, { status: 500 })
+    return NextResponse.json({ 
+      success: true, 
+      data: result.rows, 
+      cached: false,
+      message: 'FROM DATABASE - saved to cache'
+    })
+  } catch (error: any) {
+    return NextResponse.json({ 
+      success: false, 
+      error: error.message || 'Failed',
+    }, { status: 500 })
   }
 }
