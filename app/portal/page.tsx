@@ -128,51 +128,50 @@ export default function Portal() {
   }
 
   if (view === 'dashboard') return (
-    <div className="bg-gray-50 min-h-screen overflow-y-auto">
+    <div style={{ backgroundColor: '#f9fafb' }}>
       {/* Header */}
-      <nav className="bg-white border-b border-gray-100 shadow-sm px-8 py-4 flex justify-between items-center sticky top-0 z-10">
-        <h1 className="text-xl font-bold text-green-600">🌍 India Geo API</h1>
-        <div className="flex items-center gap-4">
-          <span className="text-gray-500 text-sm">{user?.email}</span>
-          <span className={`px-3 py-1 rounded-full text-xs font-bold text-white ${
-            user?.plan === 'pro' ? 'bg-purple-500' :
-            user?.plan === 'premium' ? 'bg-blue-500' : 'bg-green-500'
-          }`}>{user?.plan?.toUpperCase()}</span>
-          <button onClick={() => setView('login')} className="text-gray-400 hover:text-red-500 text-sm">Logout</button>
+      <nav style={{ backgroundColor: 'white', borderBottom: '1px solid #f3f4f6', padding: '16px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 10 }}>
+        <h1 style={{ fontSize: '20px', fontWeight: 'bold', color: '#16a34a' }}>🌍 India Geo API</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <span style={{ color: '#6b7280', fontSize: '14px' }}>{user?.email}</span>
+          <span style={{ padding: '4px 12px', borderRadius: '999px', fontSize: '12px', fontWeight: 'bold', color: 'white', backgroundColor: user?.plan === 'pro' ? '#a855f7' : user?.plan === 'premium' ? '#3b82f6' : '#16a34a' }}>
+            {user?.plan?.toUpperCase()}
+          </span>
+          <button onClick={() => setView('login')} style={{ color: '#9ca3af', fontSize: '14px', cursor: 'pointer' }}>Logout</button>
         </div>
       </nav>
 
-      <div className="max-w-4xl mx-auto p-8 pb-20">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">My Dashboard</h2>
+      {/* Content */}
+      <div style={{ maxWidth: '896px', margin: '0 auto', padding: '32px', paddingBottom: '80px' }}>
+        <h2 style={{ fontSize: '24px', fontWeight: 'bold', color: '#111827', marginBottom: '24px' }}>My Dashboard</h2>
 
         {/* Plan Info */}
-        <div className="bg-white border border-green-100 p-6 rounded-xl shadow-sm mb-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-2">Your Plan</h3>
-          <p className="text-gray-500">Daily Limit: <span className="text-green-600 font-bold">{planLimits[user?.plan]?.toLocaleString()} requests/day</span></p>
-          <p className="text-gray-500 mt-1">Base URL: <span className="font-mono text-green-600 bg-green-50 px-2 py-1 rounded text-sm">https://geo-api-blond.vercel.app</span></p>
+        <div style={{ backgroundColor: 'white', border: '1px solid #d1fae5', padding: '24px', borderRadius: '12px', marginBottom: '24px' }}>
+          <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#111827', marginBottom: '8px' }}>Your Plan</h3>
+          <p style={{ color: '#6b7280' }}>Daily Limit: <span style={{ color: '#16a34a', fontWeight: 'bold' }}>{planLimits[user?.plan]?.toLocaleString()} requests/day</span></p>
+          <p style={{ color: '#6b7280', marginTop: '4px' }}>Base URL: <span style={{ fontFamily: 'monospace', color: '#16a34a', backgroundColor: '#f0fdf4', padding: '2px 8px', borderRadius: '4px', fontSize: '14px' }}>https://geo-api-blond.vercel.app</span></p>
         </div>
 
         {/* API Keys */}
-        <div className="bg-white border border-gray-100 p-6 rounded-xl shadow-sm mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-bold text-gray-900">API Keys</h3>
-            <button onClick={createKey} className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-bold text-sm">
+        <div style={{ backgroundColor: 'white', border: '1px solid #f3f4f6', padding: '24px', borderRadius: '12px', marginBottom: '24px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#111827' }}>API Keys</h3>
+            <button onClick={createKey} style={{ backgroundColor: '#16a34a', color: 'white', padding: '8px 16px', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer', border: 'none' }}>
               + New Key
             </button>
           </div>
           {apiKeys.map((key: any) => (
-            <div key={key.id} className="bg-gray-50 border border-gray-100 p-4 rounded-lg mb-3">
-              <div className="flex justify-between items-center">
+            <div key={key.id} style={{ backgroundColor: '#f9fafb', border: '1px solid #f3f4f6', padding: '16px', borderRadius: '8px', marginBottom: '12px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <p className="font-bold text-gray-900">{key.name}</p>
-                  <p className="font-mono text-green-600 text-sm bg-green-50 px-2 py-1 rounded mt-1">{key.key_value}</p>
+                  <p style={{ fontWeight: 'bold', color: '#111827' }}>{key.name}</p>
+                  <p style={{ fontFamily: 'monospace', color: '#16a34a', fontSize: '14px', backgroundColor: '#f0fdf4', padding: '4px 8px', borderRadius: '4px', marginTop: '4px' }}>{key.key_value}</p>
                 </div>
-                <div className="text-right">
-                  <button onClick={() => copyKey(key.key_value)}
-                    className="bg-green-100 hover:bg-green-200 text-green-700 px-3 py-1 rounded text-sm mb-2 block w-full">
+                <div style={{ textAlign: 'right' }}>
+                  <button onClick={() => copyKey(key.key_value)} style={{ backgroundColor: '#dcfce7', color: '#15803d', padding: '4px 12px', borderRadius: '4px', fontSize: '14px', cursor: 'pointer', border: 'none', display: 'block', marginBottom: '4px' }}>
                     {copied === key.key_value ? '✅ Copied!' : '📋 Copy Key'}
                   </button>
-                  <p className="text-gray-400 text-xs">Today: {key.requests_today} | Total: {key.requests_total}</p>
+                  <p style={{ color: '#9ca3af', fontSize: '12px' }}>Today: {key.requests_today} | Total: {key.requests_total}</p>
                 </div>
               </div>
             </div>
@@ -180,35 +179,33 @@ export default function Portal() {
         </div>
 
         {/* Quick Start */}
-        <div className="bg-white border border-gray-100 p-6 rounded-xl shadow-sm mb-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Start</h3>
-          <p className="text-gray-500 text-sm mb-2">Get all states:</p>
-          <pre className="bg-gray-900 text-green-400 p-4 rounded-lg text-sm overflow-x-auto">{`fetch('https://geo-api-blond.vercel.app/api/states', {
+        <div style={{ backgroundColor: 'white', border: '1px solid #f3f4f6', padding: '24px', borderRadius: '12px', marginBottom: '24px' }}>
+          <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#111827', marginBottom: '16px' }}>Quick Start</h3>
+          <p style={{ color: '#6b7280', fontSize: '14px', marginBottom: '8px' }}>Get all states:</p>
+          <pre style={{ backgroundColor: '#111827', color: '#4ade80', padding: '16px', borderRadius: '8px', fontSize: '14px', overflowX: 'auto' }}>{`fetch('https://geo-api-blond.vercel.app/api/states', {
   headers: { 'x-api-key': '${apiKeys[0]?.key_value || 'YOUR_API_KEY'}' }
 })`}</pre>
         </div>
 
         {/* Upgrade Plan */}
-        <div className="bg-white border border-gray-100 p-6 rounded-xl shadow-sm mb-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">💳 Upgrade Plan</h3>
-          <div className="grid grid-cols-3 gap-4">
+        <div style={{ backgroundColor: 'white', border: '1px solid #f3f4f6', padding: '24px', borderRadius: '12px', marginBottom: '24px' }}>
+          <h3 style={{ fontSize: '18px', fontWeight: 'bold', color: '#111827', marginBottom: '16px' }}>💳 Upgrade Plan</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
             {[
               { plan: 'premium', name: 'Premium', price: '₹99/mo', amount: 9900, requests: '10,000/day' },
               { plan: 'pro', name: 'Pro', price: '₹299/mo', amount: 29900, requests: '1,00,000/day' },
               { plan: 'unlimited', name: 'Unlimited', price: '₹999/mo', amount: 99900, requests: 'Unlimited' },
             ].map(p => (
-              <div key={p.plan} className={`border-2 p-4 rounded-xl text-center ${
-                user?.plan === p.plan ? 'border-green-500 bg-green-50' : 'border-gray-100 hover:border-green-200'
-              }`}>
-                <h4 className="font-bold text-gray-900">{p.name}</h4>
-                <p className="text-green-600 font-bold text-xl my-2">{p.price}</p>
-                <p className="text-gray-400 text-xs mb-3">{p.requests}</p>
+              <div key={p.plan} style={{ border: user?.plan === p.plan ? '2px solid #16a34a' : '2px solid #f3f4f6', backgroundColor: user?.plan === p.plan ? '#f0fdf4' : 'white', padding: '16px', borderRadius: '12px', textAlign: 'center' }}>
+                <h4 style={{ fontWeight: 'bold', color: '#111827' }}>{p.name}</h4>
+                <p style={{ color: '#16a34a', fontWeight: 'bold', fontSize: '20px', margin: '8px 0' }}>{p.price}</p>
+                <p style={{ color: '#9ca3af', fontSize: '12px', marginBottom: '12px' }}>{p.requests}</p>
                 {user?.plan === p.plan ? (
-                  <p className="text-green-600 font-bold text-sm">✅ Current Plan</p>
+                  <p style={{ color: '#16a34a', fontWeight: 'bold', fontSize: '14px' }}>✅ Current Plan</p>
                 ) : (
                   <button
                     onClick={() => handlePayment(p.plan, p.amount, p.name)}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-bold text-sm">
+                    style={{ width: '100%', backgroundColor: '#16a34a', color: 'white', padding: '8px', borderRadius: '8px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer', border: 'none' }}>
                     Upgrade
                   </button>
                 )}
@@ -222,37 +219,43 @@ export default function Portal() {
   )
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center">
-      <div className="bg-white border border-gray-100 shadow-lg p-8 rounded-2xl w-96">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">🌍 India Geo API</h1>
-        <p className="text-gray-400 text-sm mb-6">619,246 villages across India</p>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom, #f0fdf4, white)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ backgroundColor: 'white', border: '1px solid #f3f4f6', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', padding: '32px', borderRadius: '16px', width: '384px' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#111827', marginBottom: '4px' }}>🌍 India Geo API</h1>
+        <p style={{ color: '#9ca3af', fontSize: '14px', marginBottom: '24px' }}>619,246 villages across India</p>
 
-        <div className="flex mb-6 bg-gray-100 rounded-lg p-1">
+        <div style={{ display: 'flex', marginBottom: '24px', backgroundColor: '#f3f4f6', borderRadius: '8px', padding: '4px' }}>
           <button onClick={() => { setView('login'); setError('') }}
-            className={`flex-1 py-2 rounded-md font-medium text-sm transition-all ${
-              view === 'login' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-500'
-            }`}>Login</button>
+            style={{ flex: 1, padding: '8px', borderRadius: '6px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', border: 'none', backgroundColor: view === 'login' ? 'white' : 'transparent', color: view === 'login' ? '#16a34a' : '#6b7280' }}>
+            Login
+          </button>
           <button onClick={() => { setView('register'); setError('') }}
-            className={`flex-1 py-2 rounded-md font-medium text-sm transition-all ${
-              view === 'register' ? 'bg-white text-green-600 shadow-sm' : 'text-gray-500'
-            }`}>Register</button>
+            style={{ flex: 1, padding: '8px', borderRadius: '6px', fontWeight: '500', fontSize: '14px', cursor: 'pointer', border: 'none', backgroundColor: view === 'register' ? 'white' : 'transparent', color: view === 'register' ? '#16a34a' : '#6b7280' }}>
+            Register
+          </button>
         </div>
 
-        {error && <p className={`mb-4 text-sm p-3 rounded-lg ${
-          error.startsWith('✅') ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-500'
-        }`}>{error}</p>}
+        {error && (
+          <p style={{ marginBottom: '16px', fontSize: '14px', padding: '12px', borderRadius: '8px', backgroundColor: error.startsWith('✅') ? '#f0fdf4' : '#fef2f2', color: error.startsWith('✅') ? '#16a34a' : '#ef4444' }}>
+            {error}
+          </p>
+        )}
 
         {view === 'register' && (
-          <input className="w-full border border-gray-200 text-gray-900 p-3 rounded-lg mb-3 focus:outline-none focus:border-green-400"
+          <input
+            style={{ width: '100%', border: '1px solid #e5e7eb', color: '#111827', padding: '12px', borderRadius: '8px', marginBottom: '12px', outline: 'none', boxSizing: 'border-box' }}
             placeholder="Company Name" value={company} onChange={e => setCompany(e.target.value)} />
         )}
-        <input className="w-full border border-gray-200 text-gray-900 p-3 rounded-lg mb-3 focus:outline-none focus:border-green-400"
+        <input
+          style={{ width: '100%', border: '1px solid #e5e7eb', color: '#111827', padding: '12px', borderRadius: '8px', marginBottom: '12px', outline: 'none', boxSizing: 'border-box' }}
           placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
-        <input className="w-full border border-gray-200 text-gray-900 p-3 rounded-lg mb-4 focus:outline-none focus:border-green-400"
+        <input
+          style={{ width: '100%', border: '1px solid #e5e7eb', color: '#111827', padding: '12px', borderRadius: '8px', marginBottom: '16px', outline: 'none', boxSizing: 'border-box' }}
           type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
 
-        <button onClick={view === 'login' ? login : register}
-          className="w-full bg-green-600 hover:bg-green-700 text-white p-3 rounded-lg font-bold transition-all">
+        <button
+          onClick={view === 'login' ? login : register}
+          style={{ width: '100%', backgroundColor: '#16a34a', color: 'white', padding: '12px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', border: 'none', fontSize: '16px' }}>
           {view === 'login' ? 'Login' : 'Create Account'}
         </button>
       </div>
