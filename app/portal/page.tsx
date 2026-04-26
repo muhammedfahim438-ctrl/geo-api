@@ -193,9 +193,9 @@ export default function Portal() {
           <h3 className="text-lg font-bold text-gray-900 mb-4">💳 Upgrade Plan</h3>
           <div className="grid grid-cols-3 gap-4">
             {[
-              { plan: 'premium', name: 'Premium', price: '₹999/mo', amount: 99900, requests: '10,000/day' },
-              { plan: 'pro', name: 'Pro', price: '₹2,999/mo', amount: 299900, requests: '1,00,000/day' },
-              { plan: 'unlimited', name: 'Unlimited', price: '₹9,999/mo', amount: 999900, requests: 'Unlimited' },
+              { plan: 'premium', name: 'Premium', price: '₹99/mo', amount: 9900, requests: '10,000/day' },
+              { plan: 'pro', name: 'Pro', price: '₹299/mo', amount: 29900, requests: '1,00,000/day' },
+              { plan: 'unlimited', name: 'Unlimited', price: '₹999/mo', amount: 99900, requests: 'Unlimited' },
             ].map(p => (
               <div key={p.plan} className={`border-2 p-4 rounded-xl text-center ${
                 user?.plan === p.plan ? 'border-green-500 bg-green-50' : 'border-gray-100 hover:border-green-200'
