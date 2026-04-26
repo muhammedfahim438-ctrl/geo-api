@@ -128,9 +128,9 @@ export default function Portal() {
   }
 
   if (view === 'dashboard') return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-gray-50 min-h-screen overflow-y-auto">
       {/* Header */}
-      <nav className="bg-white border-b border-gray-100 shadow-sm px-8 py-4 flex justify-between items-center">
+      <nav className="bg-white border-b border-gray-100 shadow-sm px-8 py-4 flex justify-between items-center sticky top-0 z-10">
         <h1 className="text-xl font-bold text-green-600">🌍 India Geo API</h1>
         <div className="flex items-center gap-4">
           <span className="text-gray-500 text-sm">{user?.email}</span>
@@ -142,7 +142,7 @@ export default function Portal() {
         </div>
       </nav>
 
-      <div className="max-w-4xl mx-auto p-8">
+      <div className="max-w-4xl mx-auto p-8 pb-20">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">My Dashboard</h2>
 
         {/* Plan Info */}
@@ -189,16 +189,16 @@ export default function Portal() {
         </div>
 
         {/* Upgrade Plan */}
-        <div className="bg-white border border-gray-100 p-6 rounded-xl shadow-sm">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">Upgrade Plan</h3>
+        <div className="bg-white border border-gray-100 p-6 rounded-xl shadow-sm mb-6">
+          <h3 className="text-lg font-bold text-gray-900 mb-4">💳 Upgrade Plan</h3>
           <div className="grid grid-cols-3 gap-4">
             {[
-              { plan: 'premium', name: 'Premium', price: '₹99/mo', amount: 99900, requests: '10,000/day' },
-              { plan: 'pro', name: 'Pro', price: '₹299/mo', amount: 299900, requests: '1,00,000/day' },
-              { plan: 'unlimited', name: 'Unlimited', price: '₹999/mo', amount: 999900, requests: 'Unlimited' },
+              { plan: 'premium', name: 'Premium', price: '₹999/mo', amount: 99900, requests: '10,000/day' },
+              { plan: 'pro', name: 'Pro', price: '₹2,999/mo', amount: 299900, requests: '1,00,000/day' },
+              { plan: 'unlimited', name: 'Unlimited', price: '₹9,999/mo', amount: 999900, requests: 'Unlimited' },
             ].map(p => (
               <div key={p.plan} className={`border-2 p-4 rounded-xl text-center ${
-                user?.plan === p.plan ? 'border-green-500 bg-green-50' : 'border-gray-100'
+                user?.plan === p.plan ? 'border-green-500 bg-green-50' : 'border-gray-100 hover:border-green-200'
               }`}>
                 <h4 className="font-bold text-gray-900">{p.name}</h4>
                 <p className="text-green-600 font-bold text-xl my-2">{p.price}</p>
@@ -216,6 +216,7 @@ export default function Portal() {
             ))}
           </div>
         </div>
+
       </div>
     </div>
   )

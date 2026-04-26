@@ -10,11 +10,10 @@ const razorpay = new Razorpay({
 })
 
 const PLANS = {
-  premium: { amount: 99900, name: 'Premium Plan' },  // ₹999
-  pro: { amount: 299900, name: 'Pro Plan' },          // ₹2,999
-  unlimited: { amount: 999900, name: 'Unlimited Plan' } // ₹9,999
+  premium: { amount: 9900, name: 'Premium Plan' },   // ₹99
+  pro: { amount: 29900, name: 'Pro Plan' },           // ₹299
+  unlimited: { amount: 99900, name: 'Unlimited Plan' } // ₹999
 }
-
 export async function POST(request: Request) {
   const auth = request.headers.get('authorization')
   if (!auth?.startsWith('Bearer ')) {
