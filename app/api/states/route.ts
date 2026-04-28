@@ -1,14 +1,17 @@
-import { NextResponse } from 'next/server'
-import pool from '@/lib/db'
 import { validateApiKey } from '@/lib/auth'
+import { successResponse, errorResponse } from '@/lib/response'
 import { Redis } from '@upstash/redis'
+import pool from '@/lib/db'
 
 export async function GET(request: Request) {
+  const startTime = Date.now()
   const apiKey = request.headers.get('x-api-key')
-  if (!apiKey) return NextResponse.json({ success: false, error: 'API key required' }, { status: 401 })
+  
+  if (!apiKey) return errorResponse('INVALID_API_KEY', 'API key missing or invalid', 401)
+  
   const auth = await validateApiKey(apiKey)
-  if (!auth) return NextResponse.json({ success: false, error: 'Invalid API key' }, { status: 401 })
-  if ('error' in auth) return NextResponse.json({ success: false, error: 'Rate limit exceeded' }, { status: 429 })
+  if (!auth) return errorResponse('INVALID_API_KEY', 'API key missing or invalid', 401)
+  if ('error' in auth) return errorResponse('RATE_LIMITED', `Daily quota exceeded. Plan: ${auth.plan}, Limit: ${auth.limit}/day`, 429)
 
   try {
     const redis = new Redis({
@@ -16,34 +19,16 @@ export async function GET(request: Request) {
       token: process.env.UPSTASH_REDIS_REST_TOKEN!,
     })
 
-    // Try to get from cache
     const cached = await redis.get('states:all')
-    
     if (cached) {
-      return NextResponse.json({ 
-        success: true, 
-        data: cached, 
-        cached: true,
-        message: 'FROM REDIS CACHE'
-      })
+      return successResponse(cached, auth.plan, auth.requestsToday, auth.limit)
     }
 
-    // Get from database
     const result = await pool.query('SELECT code, name FROM states ORDER BY name')
-    
-    // Save to Redis
     await redis.setex('states:all', 86400, result.rows)
     
-    return NextResponse.json({ 
-      success: true, 
-      data: result.rows, 
-      cached: false,
-      message: 'FROM DATABASE - saved to cache'
-    })
-  } catch (error: any) {
-    return NextResponse.json({ 
-      success: false, 
-      error: error.message || 'Failed',
-    }, { status: 500 })
+    return successResponse(result.rows, auth.plan, auth.requestsToday, auth.limit)
+  } catch (error) {
+    return errorResponse('INTERNAL_ERROR', 'Server-side error', 500)
   }
 }

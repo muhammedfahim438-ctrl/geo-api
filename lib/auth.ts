@@ -1,4 +1,3 @@
-import { Pool } from 'pg'
 import pool from './db'
 
 // Check API key and return user info
@@ -22,15 +21,15 @@ export async function validateApiKey(apiKey: string) {
     const key = result.rows[0]
     if (!key.is_active || !key.user_active) return null
 
-    // Check rate limits
+    // Updated rate limits per spec
     const limits: Record<string, number> = {
-      free: 100,
-      premium: 10000,
-      pro: 100000,
-      unlimited: 999999999
+      free: 5000,
+      premium: 50000,
+      pro: 300000,
+      unlimited: 1000000
     }
 
-    const limit = limits[key.plan] || 100
+    const limit = limits[key.plan] || 5000
     if (key.requests_today >= limit) {
       return { error: 'rate_limit', plan: key.plan, limit }
     }
@@ -47,7 +46,9 @@ export async function validateApiKey(apiKey: string) {
     return { 
       keyId: key.key_id, 
       userId: key.user_id, 
-      plan: key.plan 
+      plan: key.plan,
+      requestsToday: key.requests_today,
+      limit
     }
   } catch (error) {
     return null
@@ -58,6 +59,16 @@ export async function validateApiKey(apiKey: string) {
 export function generateApiKey(): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
   let result = 'geoapi_'
+  for (let i = 0; i < 32; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return result
+}
+
+// Generate API secret
+export function generateApiSecret(): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  let result = 'geosecret_'
   for (let i = 0; i < 32; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length))
   }
