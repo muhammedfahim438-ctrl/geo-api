@@ -191,13 +191,25 @@ export default function AdminDashboard() {
               </thead>
               <tbody>
                 {users.map((user: any) => (
-                  <tr key={user.id} style={{ borderBottom: '1px solid #f9fafb' }}>
-                    <td style={{ padding: '12px 8px', color: '#111827', fontSize: '14px' }}>{user.email}</td>
+                  <tr key={user.id} style={{ borderBottom: '1px solid #f9fafb', backgroundColor: user.warning_level === 95 ? '#fef2f2' : user.warning_level === 80 ? '#fffbeb' : 'white' }}>
+                    <td style={{ padding: '12px 8px', color: '#111827', fontSize: '14px' }}>
+                      {user.email}
+                      {user.warning_level === 95 && <span style={{ marginLeft: '8px', backgroundColor: '#fee2e2', color: '#dc2626', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold' }}>⚠️ 95% LIMIT</span>}
+                      {user.warning_level === 80 && <span style={{ marginLeft: '8px', backgroundColor: '#fef3c7', color: '#d97706', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold' }}>⚠️ 80% LIMIT</span>}
+                    </td>
                     <td style={{ padding: '12px 8px', color: '#6b7280', fontSize: '14px' }}>{user.company_name}</td>
                     <td style={{ padding: '12px 8px' }}>
                       <span style={{ padding: '4px 10px', borderRadius: '999px', fontSize: '12px', fontWeight: 'bold', color: 'white', backgroundColor: user.plan === 'pro' ? '#a855f7' : user.plan === 'premium' ? '#3b82f6' : user.plan === 'unlimited' ? '#f59e0b' : '#16a34a' }}>
                         {user.plan?.toUpperCase()}
                       </span>
+                    </td>
+                    <td style={{ padding: '12px 8px', fontSize: '14px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div style={{ flex: 1, backgroundColor: '#f3f4f6', borderRadius: '999px', height: '6px', minWidth: '80px' }}>
+                          <div style={{ height: '6px', borderRadius: '999px', width: `${Math.min(user.usage_percent, 100)}%`, backgroundColor: user.usage_percent >= 95 ? '#ef4444' : user.usage_percent >= 80 ? '#f59e0b' : '#16a34a' }} />
+                        </div>
+                        <span style={{ fontSize: '12px', color: '#6b7280' }}>{user.usage_percent}%</span>
+                      </div>
                     </td>
                     <td style={{ padding: '12px 8px', color: '#6b7280', fontSize: '14px' }}>{user.total_requests || 0}</td>
                     <td style={{ padding: '12px 8px', color: '#9ca3af', fontSize: '13px' }}>{new Date(user.created_at).toLocaleDateString()}</td>
