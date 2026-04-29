@@ -1,4 +1,3 @@
-
 # India Geo API — Capstone Project Documentation
 
 ## Student: Muhammed Fahim
@@ -42,14 +41,13 @@ India Geo API is a production-grade Software-as-a-Service (SaaS) platform that p
 - **payments** — Payment records
 
 ### Hierarchy
-
 Country (India)
   └── State (30)
       └── District (586)
           └── Sub-District (5,764)
               └── Village (619,246)
 
-
+'''
 ---
 
 ## 4. Data Import (ETL)
@@ -88,7 +86,7 @@ Country (India)
 | POST | /api/payment/verify | Verify payment |
 
 ### Standard Response Format
-json
+```json
 {
   "success": true,
   "count": 25,
@@ -102,7 +100,7 @@ json
     }
   }
 }
-
+```
 
 ### Error Codes
 | Code | Description |
@@ -219,6 +217,8 @@ geo-api/
 
 ---
 
+---
+
 ## 9. Deployment
 
 - **Platform:** Vercel (free tier)
@@ -258,25 +258,24 @@ geo-api/
 
 ## 12. How to Run Locally
 
-bash
-## Clone repository
+```bash
+# Clone repository
 git clone https://github.com/muhammedfahim438-ctrl/geo-api.git
 cd geo-api
 
-## Install dependencies
+# Install dependencies
 npm install
 
-## Set environment variables
+# Set environment variables
 cp .env.example .env.local
-### Add your DATABASE_URL, JWT_SECRET, RAZORPAY keys, UPSTASH keys
+# Add your DATABASE_URL, JWT_SECRET, RAZORPAY keys, UPSTASH keys
 
-## Run development server
+# Run development server
 npm run dev
 
-### Open http://localhost:3000
-
+# Open http://localhost:3000
+```
 
 ---
 
 *Documentation prepared for Capstone Project Submission — April 2026*
-```
