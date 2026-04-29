@@ -31,6 +31,9 @@ export default function Home() {
           <Link href="/portal" className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg">
             Start Free →
           </Link>
+          <Link href="/demo" className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-8 py-4 rounded-xl font-bold text-lg shadow-sm">
+            🎯 Try Live Demo
+          </Link>
           <Link href="/docs" className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 px-8 py-4 rounded-xl font-bold text-lg shadow-sm">
             View Docs
           </Link>
@@ -87,6 +90,17 @@ export default function Home() {
   ]
 }`}</pre>
           </div>
+        </div>
+      </div>
+      
+      {/* Demo CTA */}
+      <div className="max-w-5xl mx-auto px-8 py-12">
+        <div style={{ background: 'linear-gradient(135deg, #16a34a, #15803d)', borderRadius: '16px', padding: '48px', textAlign: 'center', color: 'white' }}>
+          <h2 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '12px' }}>See It In Action</h2>
+          <p style={{ color: '#d1fae5', marginBottom: '24px', fontSize: '16px' }}>Try our live demo — type any village name and watch the address auto-complete instantly</p>
+          <Link href="/demo" style={{ backgroundColor: 'white', color: '#16a34a', padding: '14px 32px', borderRadius: '12px', fontWeight: 'bold', fontSize: '16px', textDecoration: 'none', display: 'inline-block' }}>
+            🎯 Try Live Demo →
+          </Link>
         </div>
       </div>
 
